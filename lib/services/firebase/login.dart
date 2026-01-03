@@ -11,9 +11,7 @@ class Anonymously {
       User? user = result.user;
       return user;
     } catch (e) {
-      debugPrint(
-        e.toString(),
-      );
+      debugPrint(e.toString());
       return null;
     }
   }
@@ -59,7 +57,9 @@ Future<bool?> signInUser(String? emailAddress, String? password) async {
   try {
     //  emailAddress != null ? "" : "";
     final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailAddress as String, password: password as String);
+      email: emailAddress as String,
+      password: password as String,
+    );
   } on FirebaseAuthException catch (e) {
     if (e.code == 'user-not-found') {
       debugPrint('No user found for that email.');
@@ -76,6 +76,6 @@ Future<bool?> signInUser(String? emailAddress, String? password) async {
 }
 
 // sign out of the firebase database
-signOut() async {
+Future<void> signOut() async {
   await FirebaseAuth.instance.signOut();
 }

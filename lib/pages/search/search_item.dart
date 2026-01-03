@@ -4,14 +4,13 @@ import '../../services/firebase/firestore_db.dart ';
 import 'inventory_item_card_layout.dart';
 
 class SearchItem extends StatelessWidget {
-  const SearchItem({Key? key}) : super(key: key);
+  const SearchItem({super.key});
 
-  callback(snapshot, index) {
+  void callback(snapshot, index) {
     debugPrint(" finding page callback");
   }
 
   @override
-
   /// Builds the search item page with a search input and a list of inventory items.
   ///
   /// This widget provides a search interface for finding and adding products
@@ -21,9 +20,7 @@ class SearchItem extends StatelessWidget {
     FireStoreDB db = FireStoreDB();
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Find Products'),
-      ),
+      appBar: AppBar(title: const Text('Find Products')),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           // Navigate to the add item page with the database instance
@@ -64,15 +61,11 @@ class SearchItem extends StatelessWidget {
 }
 
 class card_layout extends StatelessWidget {
-  const card_layout({
-    super.key,
-    required this.db,
-  });
+  const card_layout({super.key, required this.db});
 
   final FireStoreDB db;
 
   @override
-
   /// Build the widget tree based on the data from the database.
   ///
   /// If the data is loaded, display it in a ListView with a custom card layout.
@@ -81,24 +74,25 @@ class card_layout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: db.readAllInventoryList(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            // Display the data in a ListView with a custom card layout
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                return inventoryItemCardLayout(context, snapshot, index, db);
-              },
-            );
-          } else if (snapshot.hasError) {
-            // Display an error message
-            debugPrint("Loading shopping list data =>${snapshot.error}");
-            return (const Center(child: Text('Something Went wrong')));
-          } else {
-            // Display a CircularProgressIndicator
-            return (const Center(child: CircularProgressIndicator()));
-          }
-        });
+      future: db.readAllInventoryList(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          // Display the data in a ListView with a custom card layout
+          return ListView.builder(
+            itemCount: snapshot.data!.length,
+            itemBuilder: (context, index) {
+              return inventoryItemCardLayout(context, snapshot, index, db);
+            },
+          );
+        } else if (snapshot.hasError) {
+          // Display an error message
+          debugPrint("Loading shopping list data =>${snapshot.error}");
+          return (const Center(child: Text('Something Went wrong')));
+        } else {
+          // Display a CircularProgressIndicator
+          return (const Center(child: CircularProgressIndicator()));
+        }
+      },
+    );
   }
 }

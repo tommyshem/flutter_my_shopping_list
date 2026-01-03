@@ -3,7 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ShopItem {
-// constructor
+  // constructor
   ShopItem({
     this.id,
     required this.name,
@@ -23,7 +23,8 @@ class ShopItem {
   });
 
   factory ShopItem.fromSnapshot(
-      DocumentSnapshot<Map<String, dynamic>> document) {
+    DocumentSnapshot<Map<String, dynamic>> document,
+  ) {
     final data = document.data()!;
     return ShopItem(
       id: document.id,
@@ -67,7 +68,7 @@ class ShopItem {
   }
 
   // to json so it can be uploaded to the firebase database
-  toJson() {
+  Map<String, Object?> toJson() {
     return {
       'id': id,
       'name': name,

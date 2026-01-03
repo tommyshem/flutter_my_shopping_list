@@ -23,7 +23,7 @@ class FireStoreDB {
     return userName;
   }
 
-  setUserName(String user) {
+  void setUserName(String user) {
     userName = user;
   }
 
@@ -31,8 +31,9 @@ class FireStoreDB {
 
   Future<List<ShopItem>> readAllShoppingList() async {
     final snapshot = await _fireStoreDB.collection(_shoppingList).get();
-    final shoppingItemsList =
-        snapshot.docs.map((e) => ShopItem.fromSnapshot(e)).toList();
+    final shoppingItemsList = snapshot.docs
+        .map((e) => ShopItem.fromSnapshot(e))
+        .toList();
     _shoppingItems.clear();
     _shoppingItems.addAll(shoppingItemsList);
     debugPrint("readallshoppinglist function called");
@@ -44,16 +45,20 @@ class FireStoreDB {
     return _shoppingItems.length;
   }
 
-  getShoppingItemAtIndex(int index) {
+  ShopItem getShoppingItemAtIndex(int index) {
     return _shoppingItems[index];
   }
 
-  deleteShoppingItem(String item) {
+  void deleteShoppingItem(String item) {
     deleteItem(item, _shoppingList);
   }
 
-  deleteItem(String item, String collectionName) {
-    _fireStoreDB.collection(collectionName).doc(item).delete().then(
+  void deleteItem(String item, String collectionName) {
+    _fireStoreDB
+        .collection(collectionName)
+        .doc(item)
+        .delete()
+        .then(
           (doc) => debugPrint("Document deleted"),
           onError: (e) => debugPrint("Error updating document ${e.toString()}"),
         );
@@ -64,51 +69,56 @@ class FireStoreDB {
         .collection(_shoppingList)
         .where("name", isEqualTo: name)
         .get();
-    final shoppingItem =
-        snapshot.docs.map((e) => ShopItem.fromSnapshot(e)).single;
+    final shoppingItem = snapshot.docs
+        .map((e) => ShopItem.fromSnapshot(e))
+        .single;
     return shoppingItem;
   }
 
-  addShoppingItem(ShopItem shopItem) {
+  void addShoppingItem(ShopItem shopItem) {
     writeShoppingItem(shopItem);
   }
 
-  writeShoppingItem(ShopItem shopItem) {
+  void writeShoppingItem(ShopItem shopItem) {
     _fireStoreDB
         .collection(_shoppingList)
         .add(shopItem.toJson())
         .then(
           (DocumentReference doc) => debugPrint(
-              'Shopping Item - DocumentSnapshot added with ID: ${doc.id}'),
-        )
-        .onError(
-          (error, stackTrace) => debugPrint(
-            error.toString(),
+            'Shopping Item - DocumentSnapshot added with ID: ${doc.id}',
           ),
-        );
+        )
+        .onError((error, stackTrace) => debugPrint(error.toString()));
   }
 
   // items table functions below
   Future<List<ShopItem>> readAllInventoryList() async {
     final snapshot = await _fireStoreDB.collection(_inventoryList).get();
-    final shoppingItemsList =
-        snapshot.docs.map((e) => ShopItem.fromSnapshot(e)).toList();
+    final shoppingItemsList = snapshot.docs
+        .map((e) => ShopItem.fromSnapshot(e))
+        .toList();
     return shoppingItemsList;
   }
 
-  writeInventoryItem(ShopItem shopItem) {
-    _fireStoreDB.collection(_inventoryList).add(shopItem.toJson()).then(
+  void writeInventoryItem(ShopItem shopItem) {
+    _fireStoreDB
+        .collection(_inventoryList)
+        .add(shopItem.toJson())
+        .then(
           (DocumentReference doc) =>
               debugPrint('DocumentSnapshot added with ID: ${doc.id}'),
         );
   }
 
-  findInventoryItem() {
+  void findInventoryItem() {
     // Create a reference to the cities collection
     final itemsRef = _fireStoreDB.collection(_inventoryList);
 
-// Create a query against the collection.
-    itemsRef.where("name", isEqualTo: "orange").get().then(
+    // Create a query against the collection.
+    itemsRef
+        .where("name", isEqualTo: "orange")
+        .get()
+        .then(
           (res) => {
             for (var doc in res.docs)
               {debugPrint("${doc.id} => ${doc.data()}")},
@@ -117,7 +127,7 @@ class FireStoreDB {
         );
   }
 
-  deleteInventoryItem(String item) {
+  void deleteInventoryItem(String item) {
     deleteItem(item, _inventoryList);
   }
 }

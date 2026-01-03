@@ -19,7 +19,6 @@ class _MyHomePageState extends State<MyHomePage> {
   FireStoreDB db = FireStoreDB();
 
   @override
-
   /// Build the home page of the app.
   ///
   /// The home page displays the list of shopping items. It also provides an app
@@ -42,29 +41,38 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: buildAppBar(context, db, widget),
       // Body
       body: FutureBuilder(
-          future: db.readAllShoppingList(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  return shoppingItemCardLayout(
-                      context, snapshot, index, db, callback);
-                },
-              );
-            } else if (snapshot.hasError) {
-              debugPrint("Loading shopping list data =>${snapshot.error}");
-              return (const Center(child: Text('Something Went wrong')));
-            } else {
-              return (const Center(child: CircularProgressIndicator()));
-            }
-          }),
+        future: db.readAllShoppingList(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: snapshot.data!.length,
+              itemBuilder: (context, index) {
+                return shoppingItemCardLayout(
+                  context,
+                  snapshot,
+                  index,
+                  db,
+                  callback,
+                );
+              },
+            );
+          } else if (snapshot.hasError) {
+            debugPrint("Loading shopping list data =>${snapshot.error}");
+            return (const Center(child: Text('Something Went wrong')));
+          } else {
+            return (const Center(child: CircularProgressIndicator()));
+          }
+        },
+      ),
       // Floating Button
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           setState(() {
-            Navigator.pushNamed(context, '/searchItem', arguments: db)
-                .then((_) => setState(() {}));
+            Navigator.pushNamed(
+              context,
+              '/searchItem',
+              arguments: db,
+            ).then((_) => setState(() {}));
           });
         },
         icon: const Icon(Icons.search_rounded),
@@ -73,7 +81,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  callback(snapshot, index) {
+  void callback(snapshot, index) {
     setState(() {
       db.deleteShoppingItem(snapshot.data![index].id!);
     });

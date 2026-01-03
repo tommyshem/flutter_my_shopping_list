@@ -30,7 +30,7 @@ class _AddShoppingItemState extends State<AddShoppingItem> {
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  fabPressed(BuildContext context) {
+  void fabPressed(BuildContext context) {
     debugPrint("add shopping item page fab button pressed");
     // get database instance passed in from home page
     final db = ModalRoute.of(context)!.settings.arguments as FireStoreDB;
@@ -112,14 +112,13 @@ class _AddShoppingItemState extends State<AddShoppingItem> {
               // **************** sold In  *********************
               DropdownButtonFormField(
                 dropdownColor: const Color.fromARGB(255, 157, 217, 244),
-                icon: const Icon(Icons.arrow_drop_down_circle,
-                    color: Colors.blueAccent),
-                value: _selectedValue,
+                icon: const Icon(
+                  Icons.arrow_drop_down_circle,
+                  color: Colors.blueAccent,
+                ),
+                initialValue: _selectedValue,
                 items: _soldInList.map((String items) {
-                  return DropdownMenuItem(
-                    value: items,
-                    child: Text(items),
-                  );
+                  return DropdownMenuItem(value: items, child: Text(items));
                 }).toList(),
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
@@ -175,13 +174,14 @@ class _AddShoppingItemState extends State<AddShoppingItem> {
                     ),
                   ),
                   IconButton(
-                      onPressed: () async {
-                        // String barcodeScanRes =
-                        //     await FlutterBarcodeScanner.scanBarcode(
-                        //        "#ff6666", "Cancel", false, ScanMode.DEFAULT);
-                      },
-                      highlightColor: Colors.amber,
-                      icon: const Icon(Icons.barcode_reader))
+                    onPressed: () async {
+                      // String barcodeScanRes =
+                      //     await FlutterBarcodeScanner.scanBarcode(
+                      //        "#ff6666", "Cancel", false, ScanMode.DEFAULT);
+                    },
+                    highlightColor: Colors.amber,
+                    icon: const Icon(Icons.barcode_reader),
+                  ),
                 ],
               ),
               const SizedBox(height: 20),
@@ -256,22 +256,21 @@ class _AddShoppingItemState extends State<AddShoppingItem> {
     );
   }
 
-/*  build 
+  /*  build 
 */
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text("Add Item to Inventory"),
-        ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            fabPressed(context);
-          },
-          backgroundColor: Colors.green,
-          icon: const Icon(Icons.save_alt_rounded),
-          label: const Text("Add item"),
-        ),
-        body: addItemForm());
+      appBar: AppBar(title: const Text("Add Item to Inventory")),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          fabPressed(context);
+        },
+        backgroundColor: Colors.green,
+        icon: const Icon(Icons.save_alt_rounded),
+        label: const Text("Add item"),
+      ),
+      body: addItemForm(),
+    );
   }
 }
